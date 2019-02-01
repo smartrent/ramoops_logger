@@ -4,10 +4,9 @@ An Elixir Logger for [ramoops](https://www.kernel.org/doc/html/v4.11/admin-guide
 
 Ramoops uses persistent RAM for logging so the logs can survive after a restart.
 
-## Installation
+## Configuration
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `oops_logger` to your list of dependencies in `mix.exs`:
+### Add to deps
 
 ```elixir
 def deps do
@@ -16,6 +15,26 @@ def deps do
   ]
 end
 ```
+
+### Update Config
+
+```elixir
+use Mix.Config
+
+# Add the RingLogger backend. This removes the
+# default :console backend.
+config :logger, backends: [OopsLogger]
+```
+
+## IEx Session Usage 
+
+To read the last ramoops log run:
+
+```elixir
+iex> OopsLogger.read()
+```
+
+## Docs 
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
