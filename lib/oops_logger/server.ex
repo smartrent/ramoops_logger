@@ -61,7 +61,7 @@ defmodule OopsLogger.Server do
     File.close(fd)
   end
 
-  defp apply_format(format, level, {_, message, ts, meta}) do
+  defp apply_format(format, level, {_, message, ts, _meta}) do
     Logger.Formatter.format(format, level, message, ts, [])
   end
 end
