@@ -3,11 +3,23 @@ defmodule OopsLogger do
 
   alias OopsLogger.Server
 
+  @doc """
+  Read the contents of the ramoops pstore file to the console
+  """
+  @spec read() :: :ok | {:error, File.posix()}
   def read() do
     case File.read("/sys/fs/pstore/pmsg-ramoops-0") do
       {:ok, contents} -> IO.binwrite(contents)
       error -> error
     end
+  end
+
+  @doc """
+  Stop the OopsLogger backend
+  """
+  @spec stop() :: :ok
+  def stop() do
+    Server.stop()
   end
 
   def init(_) do
@@ -29,6 +41,7 @@ defmodule OopsLogger do
   end
 
   def handle_event(:flush, state) do
+    # No flushing needed for OopsLogger
     {:ok, state}
   end
 end

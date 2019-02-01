@@ -11,8 +11,29 @@ defmodule OopsLogger.Server do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
+  @doc """
+  Log the logger message to the file
+  """
+  @spec log(
+          Logger.level(),
+          {Logger, Logger.message(), Logger.Formatter.time(), Logger.metadata()}
+        ) :: :ok | {:error, :no_server}
   def log(level, message) do
-    GenServer.cast(__MODULE__, {:log, level, message})
+    # Maybe refactor to something like
+    # this: https://github.com/nerves-project/ring_logger/blob/master/lib/ring_logger/autoclient.ex#L88
+    if !Process.whereis(__MODULE__) do
+      {:error, :no_server}
+    else
+      GenServer.cast(__MODULE__, {:log, level, message})
+    end
+  end
+
+  @doc """
+  Stop the server
+  """
+  @spec stop() :: :ok
+  def stop() do
+    GenServer.stop(__MODULE__, :normal)
   end
 
   def init(_) do
@@ -22,7 +43,9 @@ defmodule OopsLogger.Server do
           fd: fd,
           format: Logger.Formatter.compile(nil)
         }
+
         {:ok, state}
+
       {:error, reason} ->
         {:stop, reason}
     end
@@ -30,7 +53,7 @@ defmodule OopsLogger.Server do
 
   def handle_cast({:log, level, message}, %State{fd: fd, format: format} = state) do
     output = apply_format(format, level, message)
-    IO.write(fd, output) 
+    IO.write(fd, output)
     {:noreply, state}
   end
 
