@@ -2,7 +2,7 @@
 
 An Elixir Logger for [ramoops](https://www.kernel.org/doc/html/v4.11/admin-guide/ramoops.html) linux kernal panic logger.
 
-Ramoops uses persistent RAM to for logging so the logs can survive after a restart.
+Ramoops uses persistent RAM for logging so the logs can survive after a restart.
 
 ## Installation
 
