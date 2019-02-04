@@ -1,6 +1,8 @@
 defmodule OopsLogger do
   @behaviour :gen_event
 
+  @ramoops_file "/sys/fs/pstore/pmsg-ramoops-0"
+
   alias OopsLogger.Server
 
   @doc """
@@ -8,10 +10,18 @@ defmodule OopsLogger do
   """
   @spec read() :: :ok | {:error, File.posix()}
   def read() do
-    case File.read("/sys/fs/pstore/pmsg-ramoops-0") do
+    case File.read(@ramoops_file) do
       {:ok, contents} -> IO.binwrite(contents)
       error -> error
     end
+  end
+
+  @doc """
+  Check to see if there a log
+  """
+  @spec available_log?() :: boolean()
+  def available_log?() do
+    File.exists?(@ramoops_file)
   end
 
   @doc """
