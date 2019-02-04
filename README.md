@@ -13,7 +13,7 @@ Ramoops uses persistent RAM for logging so the logs can survive after a restart.
 ```elixir
 def deps do
   [
-    {:oops_logger, "~> 0.1.0"}
+    {:oops_logger, "~> 0.2.0"}
   ]
 end
 ```
