@@ -55,7 +55,7 @@ defmodule OopsLogger.Server do
 
   def handle_cast({:log, level, message}, %State{fd: fd, format: format} = state) do
     output = apply_format(format, level, message)
-    IO.binwrite(fd, output)
+    _ = IO.binwrite(fd, output)
     {:noreply, state}
   end
 

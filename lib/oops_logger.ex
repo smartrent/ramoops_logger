@@ -55,13 +55,8 @@ defmodule OopsLogger do
 
   @impl true
   def init(_) do
-    Server.start_link(nil)
+    {:ok, _pid} = Server.start_link(nil)
     {:ok, nil}
-  end
-
-  @impl true
-  def handle_call(_, _) do
-    {:ok, :hello, nil}
   end
 
   @impl true
@@ -71,7 +66,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_event({level, _gl, message}, state) do
-    Server.log(level, message)
+    _ = Server.log(level, message)
     {:ok, state}
   end
 
@@ -79,5 +74,17 @@ defmodule OopsLogger do
   def handle_event(:flush, state) do
     # No flushing needed for OopsLogger
     {:ok, state}
+  end
+
+  @impl true
+  def handle_call(_, state) do
+    # Ignore to avoid crashing on bad messages
+    {:ok, {:error, :unimplemented}, state}
+  end
+
+  @impl true
+  def terminate(_reason, _state) do
+    Server.stop()
+    :ok
   end
 end
