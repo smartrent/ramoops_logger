@@ -1,6 +1,7 @@
 # OopsLogger
 
 [![CircleCI](https://circleci.com/gh/smartrent/oops_logger.svg?style=svg)](https://circleci.com/gh/smartrent/oops_logger)
+[![Hex version](https://img.shields.io/hexpm/v/oops_logger.svg "Hex version")](https://hex.pm/packages/oops_logger)
 
 An Elixir Logger for [ramoops](https://www.kernel.org/doc/html/v4.11/admin-guide/ramoops.html) linux kernal panic logger.
 
