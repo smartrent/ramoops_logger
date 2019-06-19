@@ -1,6 +1,27 @@
 defmodule OopsLogger do
   @behaviour :gen_event
 
+  @moduledoc """
+  This is an in-memory backend for the Elixir Logger that can survive reboots.
+
+  Install it by adding it to your `config.exs`:
+
+  ```elixir
+  use Mix.Config
+
+  config :logger, backends: [:console, OopsLogger]
+
+   ```
+
+  Or add manually:
+
+  ```elixir
+  Logger.add_backend(OopsLogger)
+  ```
+
+  After a reboot, you can check if a log exists by calling `available_log?/0`.
+  """
+
   @ramoops_file "/sys/fs/pstore/pmsg-ramoops-0"
 
   alias OopsLogger.Server
@@ -32,24 +53,29 @@ defmodule OopsLogger do
     Server.stop()
   end
 
+  @impl true
   def init(_) do
     Server.start_link(nil)
     {:ok, nil}
   end
 
+  @impl true
   def handle_call(_, _) do
     {:ok, :hello, nil}
   end
 
+  @impl true
   def handle_event({_level, gl, _event}, state) when node(gl) != node() do
     {:ok, state}
   end
 
+  @impl true
   def handle_event({level, _gl, message}, state) do
     Server.log(level, message)
     {:ok, state}
   end
 
+  @impl true
   def handle_event(:flush, state) do
     # No flushing needed for OopsLogger
     {:ok, state}

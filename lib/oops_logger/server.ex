@@ -1,9 +1,11 @@
 defmodule OopsLogger.Server do
   use GenServer
+  @moduledoc false
 
   @file_name "/dev/pmsg0"
 
   defmodule State do
+    @moduledoc false
     defstruct fd: nil, format: nil
   end
 
