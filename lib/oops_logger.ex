@@ -27,14 +27,24 @@ defmodule OopsLogger do
   alias OopsLogger.Server
 
   @doc """
-  Read the contents of the ramoops pstore file to the console
+  Dump the contents of the ramoops pstore file to the console
   """
-  @spec read() :: :ok | {:error, File.posix()}
-  def read() do
+  @spec dump() :: :ok | {:error, File.posix()}
+  def dump() do
     case File.read(@ramoops_file) do
       {:ok, contents} -> IO.binwrite(contents)
       error -> error
     end
+  end
+
+  @doc """
+  Read the file contents from the ramoop pstore file. This is useful
+  if you want to pragmatically do something with the file contents,
+  like post to an external server.
+  """
+  @spec read() :: {:ok, binary()} | {:error, File.posix()}
+  def read() do
+    File.read(@ramoops_file)
   end
 
   @doc """
