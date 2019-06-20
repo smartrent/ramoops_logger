@@ -31,10 +31,29 @@ config :logger, backends: [OopsLogger]
 
 ## IEx Session Usage 
 
-To read the last ramoops log run:
+To read the last ramoops log to the console run:
 
 ```elixir
-iex> OopsLogger.read()
+iex> OopsLogger.dump()
+```
+
+To read the last ramoops log and it to a variable run:
+
+```elixir
+iex> {:ok, contents} <- OopsLogger.read()
+```
+
+## Nerves Automatic Log Check
+
+If you want to have your system check if there
+is an oops log available, and you are using Nerves,
+you can add this to your `rootfs_overlay/etc/iex.exs`
+file in your firmware project:
+
+```elixir
+if OopsLogger.available_log?() do
+  IO.puts("Oops! There's something in the oops log. Check with OopsLogger.dump()")
+end
 ```
 
 ## Docs 
