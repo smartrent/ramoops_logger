@@ -31,15 +31,9 @@ defmodule OopsLogger.Server do
   @spec log(
           Logger.level(),
           {Logger, Logger.message(), Logger.Formatter.time(), Logger.metadata()}
-        ) :: :ok | {:error, :no_server}
+        ) :: :ok
   def log(level, message) do
-    # Maybe refactor to something like
-    # this: https://github.com/nerves-project/ring_logger/blob/master/lib/ring_logger/autoclient.ex#L88
-    if !Process.whereis(__MODULE__) do
-      {:error, :no_server}
-    else
-      GenServer.cast(__MODULE__, {:log, level, message})
-    end
+    GenServer.cast(__MODULE__, {:log, level, message})
   end
 
   @doc """

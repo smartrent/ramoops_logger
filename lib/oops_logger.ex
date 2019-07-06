@@ -100,7 +100,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_event({level, _gl, message}, state) do
-    _ = Server.log(level, message)
+    Server.log(level, message)
     {:ok, state}
   end
 
