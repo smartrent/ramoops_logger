@@ -2,15 +2,27 @@ defmodule OopsLogger.Server do
   use GenServer
   @moduledoc false
 
-  @file_name "/dev/pmsg0"
+  @default_pmsg_path "/dev/pmsg0"
 
   defmodule State do
     @moduledoc false
     defstruct fd: nil, format: nil
   end
 
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  @spec start_link([OopsLogger.server_option()]) :: GenServer.on_start()
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+  end
+
+  @doc """
+  Update the logger configuration.
+
+  Options include:
+  * `:pmsg_path` - path to pmsg device (default is `/dev/pmsg0`)
+  """
+  @spec configure([OopsLogger.server_option()]) :: :ok
+  def configure(opts) do
+    GenServer.call(__MODULE__, {:configure, opts})
   end
 
   @doc """
@@ -38,8 +50,11 @@ defmodule OopsLogger.Server do
     GenServer.stop(__MODULE__, :normal)
   end
 
-  def init(_) do
-    case File.open(@file_name, [:append]) do
+  @impl true
+  def init(opts) do
+    opts = merge_and_update_opts(opts)
+
+    case open_pmsg(opts) do
       {:ok, fd} ->
         state = %State{
           fd: fd,
@@ -53,6 +68,24 @@ defmodule OopsLogger.Server do
     end
   end
 
+  @impl true
+  def handle_call({:configure, opts}, _from, %State{fd: fd} = state) do
+    opts = merge_and_update_opts(opts)
+
+    _ = File.close(fd)
+
+    case open_pmsg(opts) do
+      {:ok, new_fd} ->
+        new_state = %{state | fd: new_fd}
+
+        {:reply, :ok, new_state}
+
+      {:error, reason} ->
+        {:stop, reason}
+    end
+  end
+
+  @impl true
   def handle_cast({:log, level, message}, %State{fd: fd, format: format} = state) do
     output = apply_format(format, level, message)
     _ = IO.binwrite(fd, output)
@@ -62,6 +95,19 @@ defmodule OopsLogger.Server do
   @impl true
   def terminate(_, %State{fd: fd}) do
     File.close(fd)
+  end
+
+  defp merge_and_update_opts(opts) do
+    env = Application.get_env(:logger, OopsLogger, [])
+    opts = Keyword.merge(env, opts)
+    Application.put_env(:logger, OopsLogger, opts)
+    opts
+  end
+
+  defp open_pmsg(opts) do
+    path = Keyword.get(opts, :pmsg_path, @default_pmsg_path)
+
+    File.open(path, [:append])
   end
 
   defp apply_format(format, level, {_, message, ts, _meta}) do

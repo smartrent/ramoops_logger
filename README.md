@@ -47,9 +47,9 @@ the `OopsLogger`:
 ```elixir
 use Mix.Config
 
-# Add the RingLogger backend. This removes the
-# default :console backend.
-config :logger, backends: [OopsLogger]
+# Add the OopsLogger backend. If you  already have a logger configuration, add
+# OopsLogger the only change needed it to add OopsLogger to the :backends list.
+config :logger, backends: [OopsLogger, :console]
 ```
 
 ## IEx Session Usage

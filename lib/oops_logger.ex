@@ -11,18 +11,27 @@ defmodule OopsLogger do
 
   config :logger, backends: [:console, OopsLogger]
 
-   ```
+  # If your pstore driver creates a device that's not `/dev/pmsg0`, then change
+  # the path as follows:
+  config :logger, OopsLogger, pmsg_path: "/dev/pmsg1"
+  ```
 
   Or add manually:
 
   ```elixir
-  Logger.add_backend(OopsLogger)
+  iex> Logger.add_backend(OopsLogger)
+  :ok
+  # Configure only if the defaults don't work on your system
+  iex> Logger.configure(OopsLogger, pmsg_path: "/dev/pmsg1")
   ```
 
   After a reboot, you can check if a log exists by calling `available_log?/0`.
   """
 
   @ramoops_file "/sys/fs/pstore/pmsg-ramoops-0"
+
+  @typedoc "Path to pmsg device (default is `/dev/pmsg0`)"
+  @type server_option :: {:pmsg_path, Path.t()}
 
   alias OopsLogger.Server
 
@@ -65,9 +74,23 @@ defmodule OopsLogger do
   # Logger backend callbacks
   #
   @impl true
-  def init(_) do
-    {:ok, _pid} = Server.start_link(nil)
-    {:ok, nil}
+  def init(__MODULE__) do
+    init({__MODULE__, []})
+  end
+
+  @spec init({module(), list()}) :: {:ok, term()} | {:error, term()}
+  def init({__MODULE__, opts}) when is_list(opts) do
+    env = Application.get_env(:logger, __MODULE__, [])
+    opts = Keyword.merge(env, opts)
+    Application.put_env(:logger, __MODULE__, opts)
+
+    case Server.start_link(opts) do
+      {:ok, _pid} ->
+        {:ok, nil}
+
+      error ->
+        error
+    end
   end
 
   @impl true
@@ -85,6 +108,11 @@ defmodule OopsLogger do
   def handle_event(:flush, state) do
     # No flushing needed for OopsLogger
     {:ok, state}
+  end
+
+  @impl true
+  def handle_call({:configure, opts}, state) do
+    {:ok, Server.configure(opts), state}
   end
 
   @impl true
