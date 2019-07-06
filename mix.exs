@@ -38,7 +38,6 @@ defmodule OopsLogger.MixProject do
 
   defp package do
     [
-      maintainers: ["Matt Ludwigs"],
       licenses: ["Apache-2.0"],
       links: %{"GitHub" => "https://github.com/smartrent/oops_logger"},
       organization: "smartrent"
