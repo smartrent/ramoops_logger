@@ -38,9 +38,9 @@ defmodule OopsLogger do
   end
 
   @doc """
-  Read the file contents from the ramoop pstore file. This is useful
-  if you want to pragmatically do something with the file contents,
-  like post to an external server.
+  Read the file contents from the ramoops pstore file. This is useful if you
+  want to pragmatically do something with the file contents, like post to an
+  external server.
   """
   @spec read() :: {:ok, binary()} | {:error, File.posix()}
   def read() do
@@ -59,10 +59,11 @@ defmodule OopsLogger do
   Stop the OopsLogger backend
   """
   @spec stop() :: :ok
-  def stop() do
-    Server.stop()
-  end
+  defdelegate stop(), to: Server
 
+  #
+  # Logger backend callbacks
+  #
   @impl true
   def init(_) do
     {:ok, _pid} = Server.start_link(nil)
@@ -87,7 +88,7 @@ defmodule OopsLogger do
   end
 
   @impl true
-  def handle_call(_, state) do
+  def handle_call(_request, state) do
     # Ignore to avoid crashing on bad messages
     {:ok, {:error, :unimplemented}, state}
   end
@@ -95,6 +96,5 @@ defmodule OopsLogger do
   @impl true
   def terminate(_reason, _state) do
     Server.stop()
-    :ok
   end
 end

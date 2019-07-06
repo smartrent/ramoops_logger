@@ -59,6 +59,7 @@ defmodule OopsLogger.Server do
     {:noreply, state}
   end
 
+  @impl true
   def terminate(_, %State{fd: fd}) do
     File.close(fd)
   end
