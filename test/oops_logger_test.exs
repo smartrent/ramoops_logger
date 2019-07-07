@@ -8,17 +8,13 @@ defmodule OopsLoggerTest do
   setup do
     Logger.remove_backend(:console)
 
-    # Flush any latent messages in the Logger to avoid them polluting
-    # our tests
-    Logger.flush()
-
     # Start fresh each time
     _ = File.rm(@test_pmsg_file)
     File.touch!(@test_pmsg_file)
 
     # Start the OopsLogger with the test path
     Application.put_env(:logger, OopsLogger, pmsg_path: @test_pmsg_file)
-    Logger.add_backend(OopsLogger)
+    Logger.add_backend(OopsLogger, flush: true)
 
     on_exit(fn ->
       Logger.remove_backend(OopsLogger)
