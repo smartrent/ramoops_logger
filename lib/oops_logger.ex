@@ -95,6 +95,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_event({_level, gl, _event}, state) when node(gl) != node() do
+    # Ignore per Elixir Logger documentation
     {:ok, state}
   end
 
