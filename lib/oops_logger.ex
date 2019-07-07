@@ -112,8 +112,8 @@ defmodule OopsLogger do
     Application.put_env(:logger, __MODULE__, opts)
 
     case Server.start_link(opts) do
-      {:ok, _pid} ->
-        {:ok, nil}
+      {:ok, pid} ->
+        {:ok, pid}
 
       error ->
         error
@@ -128,7 +128,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_event({level, _gl, message}, state) do
-    Server.log(level, message)
+    Server.log(state, level, message)
     {:ok, state}
   end
 
@@ -140,7 +140,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_call({:configure, opts}, state) do
-    {:ok, Server.configure(opts), state}
+    {:ok, Server.configure(state, opts), state}
   end
 
   @impl true
@@ -150,7 +150,7 @@ defmodule OopsLogger do
   end
 
   @impl true
-  def terminate(_reason, _state) do
-    Server.stop()
+  def terminate(_reason, state) do
+    Server.stop(state)
   end
 end

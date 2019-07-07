@@ -11,7 +11,7 @@ defmodule OopsLogger.Server do
 
   @spec start_link([OopsLogger.backend_option()]) :: GenServer.on_start()
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
+    GenServer.start_link(__MODULE__, opts)
   end
 
   @doc """
@@ -20,28 +20,29 @@ defmodule OopsLogger.Server do
   Options include:
   * `:pmsg_path` - path to pmsg device (default is `/dev/pmsg0`)
   """
-  @spec configure([OopsLogger.backend_option()]) :: :ok
-  def configure(opts) do
-    GenServer.call(__MODULE__, {:configure, opts})
+  @spec configure(GenServer.server(), [OopsLogger.backend_option()]) :: :ok
+  def configure(server, opts) do
+    GenServer.call(server, {:configure, opts})
   end
 
   @doc """
   Log the logger message to the file
   """
   @spec log(
+          GenServer.server(),
           Logger.level(),
           {Logger, Logger.message(), Logger.Formatter.time(), Logger.metadata()}
         ) :: :ok
-  def log(level, message) do
-    GenServer.cast(__MODULE__, {:log, level, message})
+  def log(server, level, message) do
+    GenServer.cast(server, {:log, level, message})
   end
 
   @doc """
   Stop the server
   """
-  @spec stop() :: :ok
-  def stop() do
-    GenServer.stop(__MODULE__, :normal)
+  @spec stop(GenServer.server()) :: :ok
+  def stop(server) do
+    GenServer.stop(server, :normal)
   end
 
   @impl true
