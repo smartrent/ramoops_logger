@@ -11,9 +11,10 @@ defmodule OopsLogger do
 
   config :logger, backends: [:console, OopsLogger]
 
-  # If your pstore driver creates a device that's not `/dev/pmsg0`, then change
-  # the path as follows:
-  config :logger, OopsLogger, pmsg_path: "/dev/pmsg1"
+  # The defaults
+  config :logger, OopsLogger,
+    pmsg_path: "/dev/pmsg1",
+    recovered_log_path: "/sys/fs/pstore/pmsg-ramoops-1"
   ```
 
   Or add manually:
@@ -28,10 +29,31 @@ defmodule OopsLogger do
   After a reboot, you can check if a log exists by calling `available_log?/0`.
   """
 
-  @ramoops_file "/sys/fs/pstore/pmsg-ramoops-0"
+  @default_pmsg_log_path "/sys/fs/pstore/pmsg-ramoops-0"
 
-  @typedoc "Path to pmsg device (default is `/dev/pmsg0`)"
-  @type server_option :: {:pmsg_path, Path.t()}
+  @typedoc """
+  Options for configuring the backend:
+
+  * `:pmsg_path` - Path to pmsg device (default is `/dev/pmsg0`)
+  * `:recovered_log_path` - Path to recovered log files from previous boots
+     (default is `/sys/fs/pstore/pmsg-ramoops-0`)
+
+  These are either specified in the Application config (e.g., `config.exs`) like
+  this:
+
+  ```elixir
+  config :logger, OopsLogger,
+    pmsg_path: "/dev/pmsg1",
+    recovered_log_path: "/sys/fs/pstore/pmsg-ramoops-1"
+  ```
+
+  Or configured at runtime like:
+
+  ```elixir
+  iex> Logger.configure(OopsLogger, pmsg_path: "/dev/pmsg1")
+  ```
+  """
+  @type backend_option :: {:pmsg_path, Path.t()} | {:recovered_log_path, Path.t()}
 
   alias OopsLogger.Server
 
@@ -40,7 +62,7 @@ defmodule OopsLogger do
   """
   @spec dump() :: :ok | {:error, File.posix()}
   def dump() do
-    case File.read(@ramoops_file) do
+    case File.read(recovered_log_path()) do
       {:ok, contents} -> IO.binwrite(contents)
       error -> error
     end
@@ -53,7 +75,7 @@ defmodule OopsLogger do
   """
   @spec read() :: {:ok, binary()} | {:error, File.posix()}
   def read() do
-    File.read(@ramoops_file)
+    File.read(recovered_log_path())
   end
 
   @doc """
@@ -61,7 +83,18 @@ defmodule OopsLogger do
   """
   @spec available_log?() :: boolean()
   def available_log?() do
-    File.exists?(@ramoops_file)
+    File.exists?(recovered_log_path())
+  end
+
+  @doc """
+  Return the path to the recovered log
+
+  The path won't exist if there was nothing to recover on boot.
+  """
+  @spec recovered_log_path() :: Path.t()
+  def recovered_log_path() do
+    env = Application.get_env(:logger, __MODULE__, [])
+    Keyword.get(env, :recovered_log_path, @default_pmsg_log_path)
   end
 
   #

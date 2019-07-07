@@ -9,7 +9,7 @@ defmodule OopsLogger.Server do
     defstruct fd: nil, format: nil
   end
 
-  @spec start_link([OopsLogger.server_option()]) :: GenServer.on_start()
+  @spec start_link([OopsLogger.backend_option()]) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
@@ -20,7 +20,7 @@ defmodule OopsLogger.Server do
   Options include:
   * `:pmsg_path` - path to pmsg device (default is `/dev/pmsg0`)
   """
-  @spec configure([OopsLogger.server_option()]) :: :ok
+  @spec configure([OopsLogger.backend_option()]) :: :ok
   def configure(opts) do
     GenServer.call(__MODULE__, {:configure, opts})
   end
