@@ -64,12 +64,6 @@ defmodule OopsLogger do
     File.exists?(@ramoops_file)
   end
 
-  @doc """
-  Stop the OopsLogger backend
-  """
-  @spec stop() :: :ok
-  defdelegate stop(), to: Server
-
   #
   # Logger backend callbacks
   #
