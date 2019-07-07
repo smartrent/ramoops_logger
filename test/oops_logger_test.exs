@@ -56,6 +56,14 @@ defmodule OopsLoggerTest do
     File.rm!(new_path)
   end
 
+  test "provides a reasonable error message for bad pmsg path" do
+    Logger.remove_backend(OopsLogger)
+    Application.put_env(:logger, OopsLogger, pmsg_path: "/dev/does/not/exist")
+
+    {:error, {reason, _stuff}} = Logger.add_backend(OopsLogger)
+    assert reason == "Unable to open '/dev/does/not/exist' (:enoent). OopsLogger won't work."
+  end
+
   test "recovered log helpers" do
     assert OopsLogger.recovered_log_path() == @test_recovered_path
 

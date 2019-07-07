@@ -101,7 +101,13 @@ defmodule OopsLogger.Server do
   defp open_pmsg(opts) do
     path = Keyword.get(opts, :pmsg_path, @default_pmsg_path)
 
-    File.open(path, [:append])
+    case File.open(path, [:append]) do
+      {:ok, fd} ->
+        {:ok, fd}
+
+      {:error, reason} ->
+        {:error, "Unable to open '#{path}' (#{inspect(reason)}). OopsLogger won't work."}
+    end
   end
 
   defp apply_format(format, level, {_, message, ts, _meta}) do
