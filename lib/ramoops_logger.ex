@@ -1,4 +1,4 @@
-defmodule OopsLogger do
+defmodule RamoopsLogger do
   @behaviour :gen_event
 
   @moduledoc """
@@ -9,10 +9,10 @@ defmodule OopsLogger do
   ```elixir
   use Mix.Config
 
-  config :logger, backends: [:console, OopsLogger]
+  config :logger, backends: [:console, RamoopsLogger]
 
   # The defaults
-  config :logger, OopsLogger,
+  config :logger, RamoopsLogger,
     pmsg_path: "/dev/pmsg1",
     recovered_log_path: "/sys/fs/pstore/pmsg-ramoops-1"
   ```
@@ -20,10 +20,10 @@ defmodule OopsLogger do
   Or add manually:
 
   ```elixir
-  iex> Logger.add_backend(OopsLogger)
+  iex> Logger.add_backend(RamoopsLogger)
   :ok
   # Configure only if the defaults don't work on your system
-  iex> Logger.configure(OopsLogger, pmsg_path: "/dev/pmsg1")
+  iex> Logger.configure(RamoopsLogger, pmsg_path: "/dev/pmsg1")
   ```
 
   After a reboot, you can check if a log exists by calling `available_log?/0`.
@@ -42,7 +42,7 @@ defmodule OopsLogger do
   this:
 
   ```elixir
-  config :logger, OopsLogger,
+  config :logger, RamoopsLogger,
     pmsg_path: "/dev/pmsg1",
     recovered_log_path: "/sys/fs/pstore/pmsg-ramoops-1"
   ```
@@ -50,12 +50,12 @@ defmodule OopsLogger do
   Or configured at runtime like:
 
   ```elixir
-  iex> Logger.configure(OopsLogger, pmsg_path: "/dev/pmsg1")
+  iex> Logger.configure(RamoopsLogger, pmsg_path: "/dev/pmsg1")
   ```
   """
   @type backend_option :: {:pmsg_path, Path.t()} | {:recovered_log_path, Path.t()}
 
-  alias OopsLogger.Server
+  alias RamoopsLogger.Server
 
   @doc """
   Dump the contents of the ramoops pstore file to the console
@@ -134,7 +134,7 @@ defmodule OopsLogger do
 
   @impl true
   def handle_event(:flush, state) do
-    # No flushing needed for OopsLogger
+    # No flushing needed for RamoopsLogger
     {:ok, state}
   end
 
