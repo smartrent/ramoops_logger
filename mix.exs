@@ -1,7 +1,7 @@
 defmodule RamoopsLogger.MixProject do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.3.0"
 
   def project do
     [
@@ -39,8 +39,7 @@ defmodule RamoopsLogger.MixProject do
   defp package do
     [
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/smartrent/ramoops_logger"},
-      organization: "smartrent"
+      links: %{"GitHub" => "https://github.com/smartrent/ramoops_logger"}
     ]
   end
 
