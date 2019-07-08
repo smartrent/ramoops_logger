@@ -63,7 +63,7 @@ iex> RamoopsLogger.dump()
 To read the last ramoops log and it to a variable run:
 
 ```elixir
-iex> {:ok, contents} <- RamoopsLogger.read()
+iex> {:ok, contents} = RamoopsLogger.read()
 ```
 
 ## Nerves Automatic Log Check
