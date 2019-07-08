@@ -3,11 +3,12 @@
 [![CircleCI](https://circleci.com/gh/smartrent/ramoops_logger.svg?style=svg)](https://circleci.com/gh/smartrent/ramoops_logger)
 [![Hex version](https://img.shields.io/hexpm/v/ramoops_logger.svg "Hex version")](https://hex.pm/packages/ramoops_logger)
 
-An Elixir Logger for
+An Elixir Logger backend for
 [ramoops](https://www.kernel.org/doc/html/v4.19/admin-guide/ramoops.html) linux
-kernel panic logger.
+kernel panic logger. This backend is useful to log oopses and panics into persistent
+RAM so the logs can survive after a restart. This will enabled debugging of issues
+after rebooting or rolling back the firmware.
 
-Ramoops uses persistent RAM for logging so the logs can survive after a restart.
 
 ## Configuration
 
@@ -47,8 +48,8 @@ the `RamoopsLogger`:
 ```elixir
 use Mix.Config
 
-# Add the RamoopsLogger backend. If you  already have a logger configuration, add
-# RamoopsLogger the only change needed it to add RamoopsLogger to the :backends list.
+# Add the RamoopsLogger backend. If you already have a logger configuration, to add
+# RamoopsLogger the only change needed is to add RamoopsLogger to the :backends list.
 config :logger, backends: [RamoopsLogger, :console]
 ```
 
@@ -63,7 +64,7 @@ iex> RamoopsLogger.dump()
 To read the last ramoops log and it to a variable run:
 
 ```elixir
-iex> {:ok, contents} <- RamoopsLogger.read()
+iex> {:ok, contents} = RamoopsLogger.read()
 ```
 
 ## Nerves Automatic Log Check
