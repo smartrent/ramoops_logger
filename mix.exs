@@ -27,7 +27,7 @@ defmodule RamoopsLogger.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.19", only: :docs, runtime: false},
+      {:ex_doc, "~> 0.19", only: [:docs, :dev], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.3", only: [:test, :dev], runtime: false}
     ]
   end
