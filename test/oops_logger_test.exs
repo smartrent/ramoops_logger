@@ -1,4 +1,4 @@
-defmodule OopsLoggerTest do
+defmodule RamoopsLoggerTest do
   use ExUnit.Case, async: false
 
   @test_pmsg_file "__test_pmsg"
@@ -14,16 +14,16 @@ defmodule OopsLoggerTest do
     _ = File.rm(@test_recovered_path)
     File.touch!(@test_pmsg_file)
 
-    # Start the OopsLogger with the test path
-    Application.put_env(:logger, OopsLogger,
+    # Start the RamoopsLogger with the test path
+    Application.put_env(:logger, RamoopsLogger,
       pmsg_path: @test_pmsg_file,
       recovered_log_path: @test_recovered_path
     )
 
-    Logger.add_backend(OopsLogger, flush: true)
+    Logger.add_backend(RamoopsLogger, flush: true)
 
     on_exit(fn ->
-      Logger.remove_backend(OopsLogger)
+      Logger.remove_backend(RamoopsLogger)
       _ = File.rm(@test_pmsg_file)
       _ = File.rm(@test_recovered_path)
     end)
@@ -45,7 +45,7 @@ defmodule OopsLoggerTest do
     new_path = @test_pmsg_file <> ".new"
     _ = File.rm(new_path)
 
-    Logger.configure_backend(OopsLogger, pmsg_path: new_path)
+    Logger.configure_backend(RamoopsLogger, pmsg_path: new_path)
     _ = Logger.info("changing configuration")
     Logger.flush()
     Process.sleep(100)
@@ -57,21 +57,21 @@ defmodule OopsLoggerTest do
   end
 
   test "provides a reasonable error message for bad pmsg path" do
-    Logger.remove_backend(OopsLogger)
-    Application.put_env(:logger, OopsLogger, pmsg_path: "/dev/does/not/exist")
+    Logger.remove_backend(RamoopsLogger)
+    Application.put_env(:logger, RamoopsLogger, pmsg_path: "/dev/does/not/exist")
 
-    {:error, {reason, _stuff}} = Logger.add_backend(OopsLogger)
-    assert reason == "Unable to open '/dev/does/not/exist' (:enoent). OopsLogger won't work."
+    {:error, {reason, _stuff}} = Logger.add_backend(RamoopsLogger)
+    assert reason == "Unable to open '/dev/does/not/exist' (:enoent). RamoopsLogger won't work."
   end
 
   test "recovered log helpers" do
-    assert OopsLogger.recovered_log_path() == @test_recovered_path
+    assert RamoopsLogger.recovered_log_path() == @test_recovered_path
 
-    refute OopsLogger.available_log?()
+    refute RamoopsLogger.available_log?()
 
     File.write!(@test_recovered_path, "test test test")
 
-    assert OopsLogger.available_log?()
-    assert {:ok, "test test test"} == OopsLogger.read()
+    assert RamoopsLogger.available_log?()
+    assert {:ok, "test test test"} == RamoopsLogger.read()
   end
 end

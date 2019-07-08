@@ -1,11 +1,11 @@
-defmodule OopsLogger.MixProject do
+defmodule RamoopsLogger.MixProject do
   use Mix.Project
 
   @version "0.2.0"
 
   def project do
     [
-      app: :oops_logger,
+      app: :ramoops_logger,
       version: @version,
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
@@ -39,7 +39,7 @@ defmodule OopsLogger.MixProject do
   defp package do
     [
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/smartrent/oops_logger"},
+      links: %{"GitHub" => "https://github.com/smartrent/ramoops_logger"},
       organization: "smartrent"
     ]
   end
@@ -49,7 +49,7 @@ defmodule OopsLogger.MixProject do
       extras: ["README.md"],
       main: "readme",
       source_ref: "v#{@version}",
-      source_url: "https://github.com/smartrent/oops_logger"
+      source_url: "https://github.com/smartrent/ramoops_logger"
     ]
   end
 end

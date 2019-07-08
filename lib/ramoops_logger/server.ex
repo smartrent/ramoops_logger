@@ -1,4 +1,4 @@
-defmodule OopsLogger.Server do
+defmodule RamoopsLogger.Server do
   use GenServer
   @moduledoc false
 
@@ -9,7 +9,7 @@ defmodule OopsLogger.Server do
     defstruct fd: nil, format: nil
   end
 
-  @spec start_link([OopsLogger.backend_option()]) :: GenServer.on_start()
+  @spec start_link([RamoopsLogger.backend_option()]) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts)
   end
@@ -20,7 +20,7 @@ defmodule OopsLogger.Server do
   Options include:
   * `:pmsg_path` - path to pmsg device (default is `/dev/pmsg0`)
   """
-  @spec configure(GenServer.server(), [OopsLogger.backend_option()]) :: :ok
+  @spec configure(GenServer.server(), [RamoopsLogger.backend_option()]) :: :ok
   def configure(server, opts) do
     GenServer.call(server, {:configure, opts})
   end
@@ -93,9 +93,9 @@ defmodule OopsLogger.Server do
   end
 
   defp merge_and_update_opts(opts) do
-    env = Application.get_env(:logger, OopsLogger, [])
+    env = Application.get_env(:logger, RamoopsLogger, [])
     opts = Keyword.merge(env, opts)
-    Application.put_env(:logger, OopsLogger, opts)
+    Application.put_env(:logger, RamoopsLogger, opts)
     opts
   end
 
@@ -107,7 +107,7 @@ defmodule OopsLogger.Server do
         {:ok, fd}
 
       {:error, reason} ->
-        {:error, "Unable to open '#{path}' (#{inspect(reason)}). OopsLogger won't work."}
+        {:error, "Unable to open '#{path}' (#{inspect(reason)}). RamoopsLogger won't work."}
     end
   end
 
