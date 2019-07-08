@@ -37,7 +37,7 @@ Once you're satisfied with the Linux, add `ramoops_logger` to your project's
 ```elixir
 def deps do
   [
-    {:ramramoops_logger, "~> 0.2.0"}
+    {:ramoops_logger, "~> 0.3.0"}
   ]
 end
 ```
