@@ -3,17 +3,19 @@
 [![CircleCI](https://circleci.com/gh/smartrent/ramoops_logger.svg?style=svg)](https://circleci.com/gh/smartrent/ramoops_logger)
 [![Hex version](https://img.shields.io/hexpm/v/ramoops_logger.svg "Hex version")](https://hex.pm/packages/ramoops_logger)
 
-An Elixir Logger backend for
-[ramoops](https://www.kernel.org/doc/html/v4.19/admin-guide/ramoops.html) linux
-kernel panic logger. This backend is useful to log oopses and panics into persistent
-RAM so the logs can survive after a restart. This will enabled debugging of issues
-after rebooting or rolling back the firmware.
+This is an Elixir Logger backend for forwarding log messages to the [ramoops
+logger](https://www.kernel.org/doc/html/v4.19/admin-guide/ramoops.html) on Linux
+and Nerves systems. Messages sent to this log are written to a special area of
+DRAM that can be recovered after reboots or very short power outages.
 
+Here's a demo video:
+
+[![RamoopsLogger Demo](http://img.youtube.com/vi/vpD511Bk5rU/0.jpg)](http://www.youtube.com/watch?v=vpD511Bk5rU)
 
 ## Configuration
 
 RamoopsLogger uses the Linux `pstore` device driver, so it only works on
-Linux-based platforms. The official Nerves Projects systems start the `pstore`
+Linux-based platforms. Most official Nerves Projects systems start the `pstore`
 driver automatically and you can skip the Linux configuration.
 
 ### Linux configuration
@@ -25,6 +27,28 @@ lucky, someone will have determined a good place to store the logs. The official
 Nerves Project systems all have a small amount of memory allocated for use by
 the `pstore` driver. If you are not using Nerves, it's possible that one of the
 device tree files (for ARM platforms) may be helpful.
+
+If you're not using an official Nerves system, here's an example device tree
+fragment that would need to be updated for your device, but may be helpful as a
+start.
+
+```c
+reserved-memory {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        ramoops@88d00000{
+                compatible = "ramoops";
+                reg = <0x88d00000 0x100000>;
+                ecc-size = <16>;
+                record-size     = <0x00020000>;
+                console-size    = <0x00020000>;
+                ftrace-size     = <0>;
+                pmsg-size       = <0x00020000>;
+        };
+};
+```
 
 One way of testing whether the `pstore` driver is available is to check whether
 the `/dev/pmsg0` file exists.
