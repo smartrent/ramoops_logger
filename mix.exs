@@ -2,6 +2,7 @@ defmodule RamoopsLogger.MixProject do
   use Mix.Project
 
   @version "0.3.0"
+  @source_url "https://github.com/smartrent/ramoops_logger"
 
   def project do
     [
@@ -15,7 +16,8 @@ defmodule RamoopsLogger.MixProject do
       docs: docs(),
       dialyzer: [
         flags: [:unmatched_returns, :error_handling, :race_conditions, :underspecs]
-      ]
+      ],
+      preferred_cli_env: %{docs: :docs, "hex.build": :docs, "hex.publish": :docs}
     ]
   end
 
@@ -40,16 +42,16 @@ defmodule RamoopsLogger.MixProject do
   defp package do
     [
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/smartrent/ramoops_logger"}
+      links: %{"GitHub" => @source_url}
     ]
   end
 
   defp docs do
     [
-      extras: ["README.md"],
+      extras: ["README.md", "CHANGELOG.md"],
       main: "readme",
       source_ref: "v#{@version}",
-      source_url: "https://github.com/smartrent/ramoops_logger"
+      source_url: @source_url
     ]
   end
 end
