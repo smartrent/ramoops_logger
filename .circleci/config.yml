@@ -46,6 +46,7 @@ jobs:
       - run: mix test
       - run: mix format --check-formatted
       - run: MIX_ENV=docs mix docs
+      - run: mix credo --strict
       - run: mix hex.build
       - run: mix dialyzer --halt-exit-status
       - save_cache:
