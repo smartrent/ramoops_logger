@@ -1,6 +1,6 @@
 # RamoopsLogger
 
-[![CircleCI](https://circleci.com/gh/smartrent/ramoops_logger.svg?style=svg)](https://circleci.com/gh/smartrent/ramoops_logger)
+[![CircleCI](https://circleci.com/gh/smartrent/ramoops_logger/tree/main.svg?style=svg)](https://circleci.com/gh/smartrent/ramoops_logger/tree/main)
 [![Hex version](https://img.shields.io/hexpm/v/ramoops_logger.svg "Hex version")](https://hex.pm/packages/ramoops_logger)
 
 This is an Elixir Logger backend for forwarding log messages to the [ramoops
