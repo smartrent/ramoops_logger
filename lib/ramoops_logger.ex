@@ -115,6 +115,9 @@ defmodule RamoopsLogger do
       {:ok, pid} ->
         {:ok, pid}
 
+      :ignore ->
+        {:error, :ignore}
+
       error ->
         error
     end

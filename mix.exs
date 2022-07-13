@@ -15,7 +15,7 @@ defmodule RamoopsLogger.MixProject do
       package: package(),
       docs: docs(),
       dialyzer: [
-        flags: [:unmatched_returns, :error_handling, :race_conditions, :underspecs]
+        flags: [:missing_return, :extra_return, :unmatched_returns, :error_handling, :underspecs]
       ],
       preferred_cli_env: %{docs: :docs, "hex.build": :docs, "hex.publish": :docs}
     ]
