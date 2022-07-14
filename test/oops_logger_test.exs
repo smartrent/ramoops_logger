@@ -1,10 +1,10 @@
 defmodule RamoopsLoggerTest do
   use ExUnit.Case, async: false
 
+  require Logger
+
   @test_pmsg_file "__test_pmsg"
   @test_recovered_path "__recovered_pmsg"
-
-  require Logger
 
   setup do
     Logger.remove_backend(:console)
