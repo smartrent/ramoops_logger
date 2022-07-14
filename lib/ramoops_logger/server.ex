@@ -1,6 +1,7 @@
 defmodule RamoopsLogger.Server do
-  use GenServer
   @moduledoc false
+
+  use GenServer
 
   @default_pmsg_path "/dev/pmsg0"
 

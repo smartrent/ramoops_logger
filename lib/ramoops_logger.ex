@@ -1,6 +1,4 @@
 defmodule RamoopsLogger do
-  @behaviour :gen_event
-
   @moduledoc """
   This is an in-memory backend for the Elixir Logger that can survive reboots.
 
@@ -29,6 +27,10 @@ defmodule RamoopsLogger do
   After a reboot, you can check if a log exists by calling `available_log?/0`.
   """
 
+  @behaviour :gen_event
+
+  alias RamoopsLogger.Server
+
   @default_pmsg_log_path "/sys/fs/pstore/pmsg-ramoops-0"
 
   @typedoc """
@@ -54,8 +56,6 @@ defmodule RamoopsLogger do
   ```
   """
   @type backend_option :: {:pmsg_path, Path.t()} | {:recovered_log_path, Path.t()}
-
-  alias RamoopsLogger.Server
 
   @doc """
   Dump the contents of the ramoops pstore file to the console
