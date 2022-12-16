@@ -32,7 +32,7 @@ defmodule RamoopsLoggerTest do
   end
 
   test "logs a message" do
-    _ = Logger.debug("hello")
+    Logger.debug("hello")
     Logger.flush()
     Process.sleep(100)
 
@@ -46,12 +46,12 @@ defmodule RamoopsLoggerTest do
     _ = File.rm(new_path)
 
     Logger.configure_backend(RamoopsLogger, pmsg_path: new_path)
-    _ = Logger.info("changing configuration")
+    Logger.info("changing configuration")
     Logger.flush()
     Process.sleep(100)
 
     contents = File.read!(new_path)
-    assert contents =~ "[info]  changing configuration"
+    assert contents =~ "changing configuration"
 
     File.rm!(new_path)
   end
