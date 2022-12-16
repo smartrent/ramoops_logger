@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.1
+
+* Changes
+  * Add missing `:gen_event` behaviour callbacks to ignore a `handle_info/2`
+    call from the logger.
+
 ## v0.3.0
 
 Renamed `OopsLogger` to `RamoopsLogger`
