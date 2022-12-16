@@ -149,6 +149,16 @@ defmodule RamoopsLogger do
   end
 
   @impl :gen_event
+  def handle_info(_, state) do
+    {:ok, state}
+  end
+
+  @impl :gen_event
+  def code_change(_old_vsn, state, _extra) do
+    {:ok, state}
+  end
+
+  @impl :gen_event
   def terminate(_reason, state) do
     Server.stop(state)
   end
