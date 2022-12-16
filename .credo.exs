@@ -1,4 +1,4 @@
-# config/.credo.exs
+# .credo.exs
 %{
   configs: [
     %{
