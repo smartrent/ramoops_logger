@@ -46,7 +46,7 @@ defmodule RamoopsLogger.Server do
     GenServer.stop(server, :normal)
   end
 
-  @impl true
+  @impl GenServer
   def init(opts) do
     opts = merge_and_update_opts(opts)
 
@@ -64,7 +64,7 @@ defmodule RamoopsLogger.Server do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:configure, opts}, _from, %State{fd: fd} = state) do
     opts = merge_and_update_opts(opts)
 
@@ -81,14 +81,14 @@ defmodule RamoopsLogger.Server do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_cast({:log, level, message}, %State{fd: fd, format: format} = state) do
     output = apply_format(format, level, message)
     _ = IO.binwrite(fd, output)
     {:noreply, state}
   end
 
-  @impl true
+  @impl GenServer
   def terminate(_, %State{fd: fd}) do
     File.close(fd)
   end

@@ -100,12 +100,11 @@ defmodule RamoopsLogger do
   #
   # Logger backend callbacks
   #
-  @impl true
+  @impl :gen_event
   def init(__MODULE__) do
     init({__MODULE__, []})
   end
 
-  @spec init({module(), list()}) :: {:ok, term()} | {:error, term()}
   def init({__MODULE__, opts}) when is_list(opts) do
     env = Application.get_env(:logger, __MODULE__, [])
     opts = Keyword.merge(env, opts)
@@ -123,36 +122,33 @@ defmodule RamoopsLogger do
     end
   end
 
-  @impl true
+  @impl :gen_event
   def handle_event({_level, gl, _event}, state) when node(gl) != node() do
     # Ignore per Elixir Logger documentation
     {:ok, state}
   end
 
-  @impl true
   def handle_event({level, _gl, message}, state) do
     Server.log(state, level, message)
     {:ok, state}
   end
 
-  @impl true
   def handle_event(:flush, state) do
     # No flushing needed for RamoopsLogger
     {:ok, state}
   end
 
-  @impl true
+  @impl :gen_event
   def handle_call({:configure, opts}, state) do
     {:ok, Server.configure(state, opts), state}
   end
 
-  @impl true
   def handle_call(_request, state) do
     # Ignore to avoid crashing on bad messages
     {:ok, {:error, :unimplemented}, state}
   end
 
-  @impl true
+  @impl :gen_event
   def terminate(_reason, state) do
     Server.stop(state)
   end
