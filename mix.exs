@@ -31,7 +31,8 @@ defmodule RamoopsLogger.MixProject do
     [
       {:ex_doc, "~> 0.19", only: :docs, runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.1", only: [:test, :dev], runtime: false}
+      {:dialyxir, "~> 1.1", only: [:test, :dev], runtime: false},
+      {:igniter, "~> 0.5", optional: true, runtime: false},
     ]
   end
 

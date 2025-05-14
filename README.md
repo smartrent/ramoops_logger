@@ -55,8 +55,14 @@ the `/dev/pmsg0` file exists.
 
 ### Update your Elixir project
 
-Once you're satisfied with the Linux, add `ramoops_logger` to your project's
-`mix.exs` dependencies list.
+Once you're satisfied with the Linux, add `ramoops_logger` you can install using [igniter](https://hexdocs.pm/igniter) for the most comfortable experience:
+
+```sh
+mix archive.install hex igniter_new
+mix igniter.install ring_logger
+```
+
+Or add `ramoops_logger` to your projects dependencies in your `mix.exs`:
 
 ```elixir
 def deps do
