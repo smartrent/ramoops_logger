@@ -12,18 +12,6 @@ defmodule Mix.Tasks.RamoopsLogger.Install.Docs do
   def long_doc do
     """
     #{short_doc()}
-
-    Longer explanation of your task
-
-    ## Example
-
-    ```bash
-    #{example()}
-    ```
-
-    ## Options
-
-    * `--example-option` or `-e` - Docs for your option
     """
   end
 end
