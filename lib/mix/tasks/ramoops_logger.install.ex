@@ -2,7 +2,7 @@ defmodule Mix.Tasks.RamoopsLogger.Install.Docs do
   @moduledoc false
 
   def short_doc do
-    "A short description of your task"
+    "Install RamoopsLogger with the default configuration"
   end
 
   def example do
