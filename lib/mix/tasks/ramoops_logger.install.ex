@@ -70,10 +70,15 @@ if Code.ensure_loaded?(Igniter) do
 
     @impl Igniter.Mix.Task
     def igniter(igniter) do
-      # Do your work here and return an updated igniter
+      config_file =
+        if Igniter.Project.Deps.has_dep?(igniter, :nerves) do
+          "target.exs"
+        else
+          "config.exs"
+        end
+
       igniter
-      |> Igniter.Project.Config.configure("config.exs", :logger, [:backends], [RamoopsLogger, :console])
-      # |> Igniter.add_warning("mix ramoops_logger.install is not yet implemented")
+      |> Igniter.Project.Config.configure(config_file, :logger, [:backends], [RamoopsLogger, :console])
     end
   end
 else
