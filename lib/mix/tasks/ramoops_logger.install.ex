@@ -71,7 +71,7 @@ if Code.ensure_loaded?(Igniter) do
     @impl Igniter.Mix.Task
     def igniter(igniter) do
       config_file =
-        if Igniter.Project.Deps.has_dep?(igniter, :nerves) do
+        if Igniter.exists?(igniter, "config/target.exs") do
           "target.exs"
         else
           "config.exs"
