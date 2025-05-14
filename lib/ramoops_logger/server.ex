@@ -32,7 +32,7 @@ defmodule RamoopsLogger.Server do
   @spec log(
           GenServer.server(),
           Logger.level(),
-          {Logger, Logger.message(), Logger.Formatter.time(), Logger.metadata()}
+          {Logger, Logger.message(), Logger.Formatter.time_ms(), Logger.metadata()}
         ) :: :ok
   def log(server, level, message) do
     GenServer.cast(server, {:log, level, message})
